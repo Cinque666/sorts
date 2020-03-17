@@ -209,6 +209,7 @@ public class CollectionImpl<T> implements Collection<T>, Iterable<T> {
         final Object[] temp = new Object[checkEntries(c)];
         retain(c, temp);
         items = temp;
+        size = temp.length;
         return true;
     }
 
