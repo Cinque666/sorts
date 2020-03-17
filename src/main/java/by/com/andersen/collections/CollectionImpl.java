@@ -204,7 +204,7 @@ public class CollectionImpl<T> implements Collection<T>, Iterable<T> {
     @Override
     public boolean retainAll(Collection<?> c) {
         if(c.size() == 0){
-            return true;
+            return false;
         }
         final Object[] temp = new Object[checkEntries(c)];
         retain(c, temp);
