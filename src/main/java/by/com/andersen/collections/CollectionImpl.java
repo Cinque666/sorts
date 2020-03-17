@@ -137,10 +137,14 @@ public class CollectionImpl<T> implements Collection<T>, Iterable<T> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        int counter = 0;
         if (c.size() > size) {
             return false;
         }
+        return checkEntries(c) == c.size();
+    }
+
+    private int checkEntries(Collection<?> c){
+        int counter = 0;
         Iterator cIt = c.iterator();
         while (cIt.hasNext()) {
             for (Object item : items) {
@@ -150,24 +154,26 @@ public class CollectionImpl<T> implements Collection<T>, Iterable<T> {
             }
             cIt.next();
         }
-        return counter == c.size();
+        return counter;
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
         if (c.size() == 0) {
             return false;
-        } else{
-            increaseCapacity(c.size());
-            for (T t : c) {
-                for (int i = 0; i < size; i++) {
-                    if (items[i] == null) {
-                        items[i] = t;
-                    }
-                }
-            }
-            return true;
         }
+        Object[] cArr = c.toArray();
+        if(cArr.length > items.length){
+            copyArray(cArr, 0, items, size, size + cArr.length);
+        } else {
+            copyArray(items, 0, cArr, cArr.length, size+ cArr.length);
+        }
+        increaseCapacity(cArr.length);
+        return true;
+    }
+
+    private void copyArray(Object[] first, int srcPos, Object[] second, int secongLength, int newSize){
+        System.arraycopy(first, srcPos, second, second.length, newSize);
     }
 
     private void increaseCapacity(int size){
@@ -177,12 +183,46 @@ public class CollectionImpl<T> implements Collection<T>, Iterable<T> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        if(c.size() == 0){
+            return false;
+        }
+        setNullable(c);
+        return true;
+    }
+
+    private void setNullable(Collection<?> c){
+        Iterator cIt = c.iterator();
+        while(cIt.hasNext()){
+            for(int i = 0; i< size; i++){
+                if(cIt.equals(items[i])){
+                    items[i] = null;
+                }
+            }
+        }
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        if(c.size() == 0){
+            return true;
+        }
+        final Object[] temp = new Object[checkEntries(c)];
+        retain(c, temp);
+        items = temp;
+        return true;
+    }
+
+    private void retain(Collection<?> c, Object[] temp) {
+        int counter = 0;
+        Iterator cIt = c.iterator();
+        while (cIt.hasNext()) {
+            for (int i = 0; i < size; i++) {
+                if (cIt.equals(items[i])){
+                    temp[counter] = items[i];
+                    counter++;
+                }
+            }
+        }
     }
 
     @Override
