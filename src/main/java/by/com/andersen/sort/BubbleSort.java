@@ -1,4 +1,4 @@
-package by.com.andersen;
+package by.com.andersen.sort;
 
 import java.util.List;
 

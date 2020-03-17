@@ -1,7 +1,6 @@
-package by.com.andersen;
+package by.com.andersen.sort;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
+import by.com.andersen.sort.BubbleSort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,29 +10,21 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MergeSortTest {
+class BubbleSortTest {
 
-    private MergeSort mergeSort;
+    private BubbleSort bubbleSort;
 
     @BeforeEach
     private void init(){
-        mergeSort = new MergeSort();
+        bubbleSort = new BubbleSort();
     }
 
     @Test
-    public void mergeNullTest(){
-        List<Integer> nullList = null;
-
-        assertEquals(null, mergeSort.mergeSort(nullList));
-    }
-
-    @Test
-    public void mergePositiveTest(){
+    void bubbleSortPositive() {
         List<Integer> expected = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));
         List<Integer> sort = new ArrayList<>(Arrays.asList(1, 6, 5, 4, 3, 2));
 
-        sort = mergeSort.mergeSort(sort);
-
+        bubbleSort.bubbleSort(sort);
         assertEquals(expected.hashCode(), sort.hashCode());
     }
 
@@ -42,7 +33,7 @@ class MergeSortTest {
         List<Integer> expected = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 4));
         List<Integer> sort = new ArrayList<>(Arrays.asList(1, 6, 5, 4, 3, 2));
 
-        mergeSort.mergeSort(sort);
+        bubbleSort.bubbleSort(sort);
         assertNotEquals(expected.hashCode(), sort.hashCode());
     }
 }
